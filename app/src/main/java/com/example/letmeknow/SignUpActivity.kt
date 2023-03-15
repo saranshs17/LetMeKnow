@@ -3,6 +3,7 @@ package com.example.letmeknow
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import com.example.letmeknow.databinding.ActivitySignUpBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -14,6 +15,10 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        //To hide Action and status bar
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        supportActionBar?.hide()
 
         firebaseAuth = FirebaseAuth.getInstance()
         binding.directsignin.setOnClickListener {

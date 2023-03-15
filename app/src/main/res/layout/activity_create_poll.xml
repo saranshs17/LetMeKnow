@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".CreatePollActivity"
+    android:animateLayoutChanges="true">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="14dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="14dp" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/questionbox"
+        style="@style/LoginTextInputOuterFieldStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="0dp"
+        android:layout_marginTop="10dp"
+        android:hint="Add your Question"
+        app:boxStrokeColor="@color/c1"
+        app:hintTextColor="@color/c1"
+        app:layout_constraintEnd_toStartOf="@id/guideline_right"
+        app:layout_constraintStart_toStartOf="@id/guideline_left"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/question"
+            style="@style/LoginTextInputInnerFieldStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/votingchoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Allow voters to vote for"
+        android:textColor="#F88723"
+
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="@id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/questionbox" />
+
+    <RadioGroup
+        android:id="@+id/radiogp1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/votingchoice">
+
+        <RadioButton
+            android:id="@+id/choice1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/c1"
+            android:checked="true"
+            android:onClick="checkButton"
+            android:text="Single choice" />
+
+        <RadioButton
+            android:id="@+id/choice2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="checkButton"
+            android:text="Multiple choices" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/endtime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Poll end date and time"
+        android:textColor="#F88723"
+
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="@id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/radiogp1" />
+
+    <Button
+        android:id="@+id/btntextTime"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@tools:sample/date/ddmmyy"
+        android:textColor="@color/dark_grey"
+        android:textSize="15sp"
+        app:icon="@drawable/round_access_time_24"
+        app:iconTint="@color/dark_grey"
+
+        app:layout_constraintStart_toStartOf="@id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/endtime">
+
+    </Button>
+
+    <TextView
+        android:id="@+id/options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Provide Options"
+        android:textColor="#F88723"
+
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="@id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/btntextTime" />
+
+    <LinearLayout
+        android:id="@+id/optionLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@id/guideline_right"
+        app:layout_constraintStart_toStartOf="@id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/options">
+
+
+        <LinearLayout
+            android:id="@+id/optionList"
+            android:layout_width="382dp"
+            android:layout_height="49dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+
+            app:layout_constraintEnd_toEndOf="@id/guideline_right"
+            app:layout_constraintStart_toStartOf="@id/guideline_left"
+            app:layout_constraintTop_toBottomOf="@+id/options">
+
+            <EditText
+                android:id="@+id/option"
+                android:layout_width="335dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/round_grey"
+                android:hint="Option"
+                android:paddingLeft="10dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"></EditText>
+
+            <Button
+                android:id="@+id/option_remove"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/round_close_24"
+                android:onClick="onDelete">
+            </Button>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+
+        android:id="@+id/button_add"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/round_primary"
+        android:drawableRight="@drawable/ic_baseline_add2_24"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:onClick="onAdd"
+        android:text="Add"
+        android:textAllCaps="false"
+
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/optionLayout"></Button>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/extendedFloatingActionButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:backgroundTint="@color/c1"
+        android:elevation="30dp"
+        android:text="Save poll"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:icon="@drawable/round_done_24"
+        app:iconTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.933"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.971" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

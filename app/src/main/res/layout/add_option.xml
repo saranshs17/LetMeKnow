@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="382dp"
+    android:layout_height="49dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    >
+    <EditText
+        android:id="@+id/option"
+        android:layout_width="335dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/round_grey"
+        android:hint="Option"
+        android:paddingLeft="10dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"></EditText>
+
+    <Button
+        android:id="@+id/option_remove"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:background="@drawable/round_close_24"
+        android:onClick="onDelete">
+    </Button>
+</LinearLayout>
