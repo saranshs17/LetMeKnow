@@ -10,7 +10,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".CreatePollActivity"
+    tools:context=".Activity.CreatePollActivity"
     android:animateLayoutChanges="true">
 
     <androidx.constraintlayout.widget.Guideline
@@ -26,8 +26,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_end="14dp" />
-
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/questionbox"
         style="@style/LoginTextInputOuterFieldStyle"
@@ -42,6 +40,7 @@
         app:layout_constraintStart_toStartOf="@id/guideline_left"
         app:layout_constraintTop_toTopOf="parent">
 
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/question"
             style="@style/LoginTextInputInnerFieldStyle"
@@ -49,18 +48,36 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
+    <Button
+        android:id="@+id/Simg"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/baseline_image_24"
+        android:text="Select Image"
+        android:textColor="@color/black"
+        app:iconTint="#016362"
+        app:layout_constraintTop_toBottomOf="@id/questionbox"
+        app:layout_constraintStart_toStartOf="@id/guideline_left"
+        ></Button>
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/Simg"
+            ></ImageView>
     <TextView
         android:id="@+id/votingchoice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="10dp"
         android:text="Allow voters to vote for"
         android:textColor="#F88723"
 
         android:textSize="18dp"
         app:layout_constraintStart_toStartOf="@id/guideline_left"
-        app:layout_constraintTop_toBottomOf="@+id/questionbox" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <RadioGroup
         android:id="@+id/radiogp1"

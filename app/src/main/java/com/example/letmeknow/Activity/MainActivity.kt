@@ -1,34 +1,40 @@
-package com.example.letmeknow
+package com.example.letmeknow.Activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.letmeknow.Fragment.HomeFragment
+import com.example.letmeknow.Fragment.ProfileFragment
+import com.example.letmeknow.Fragment.MyPollFragment
+import com.example.letmeknow.R
 import com.example.letmeknow.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavView : BottomNavigationView
     lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         replaceFragment(HomeFragment())
 
+
+
         //for bottom navigation bar
         binding.bottomNavigationView.setOnItemSelectedListener {
             when(it.itemId){
-                R.id.home-> replaceFragment(HomeFragment())
-                R.id.notifications-> replaceFragment(NotificationsFragment())
-                R.id.profile->replaceFragment(ProfileFragment())
+                R.id.home -> replaceFragment(HomeFragment())
+                R.id.notifications -> replaceFragment(MyPollFragment())
+                R.id.profile ->replaceFragment(ProfileFragment())
             }
             true
         }
-
     }
 
     private fun replaceFragment(fragment : Fragment){
@@ -47,16 +53,21 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
-            R.id.search->{
+            R.id.search ->{
                 Toast.makeText(this,"You clicked Search", Toast.LENGTH_LONG).show()
                 return true
             }
-            R.id.about->{
+            R.id.about ->{
                 Toast.makeText(this,"You clicked About", Toast.LENGTH_LONG).show()
                 return true
             }
-            R.id.settings->{
+            R.id.settings ->{
                 Toast.makeText(this,"You clicked Settings", Toast.LENGTH_LONG).show()
+                return true
+            }
+            R.id.logout ->{
+                val intent = Intent(this, SignUpActivity::class.java)
+                startActivity(intent)
                 return true
             }else->{
                 super.onOptionsItemSelected(item)

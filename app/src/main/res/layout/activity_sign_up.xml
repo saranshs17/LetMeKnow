@@ -6,15 +6,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/bg_sign_in_up"
-    tools:context=".SignUpActivity">
+    android:background="@drawable/abs"
+    tools:context=".Activity.SignUpActivity">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
         app:cardCornerRadius="30dp"
-        app:cardElevation="20dp">
+        app:cardElevation="20dp"
+        app:cardBackgroundColor="#FFF2E7">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -78,7 +79,7 @@
                 android:text="Sign Up"
                 android:textSize="18sp"
                 app:cornerRadius="20dp"
-                android:backgroundTint="@color/c4"/>
+                android:backgroundTint="#FF983E"/>
 
             <TextView
                 android:id="@+id/directsignin"

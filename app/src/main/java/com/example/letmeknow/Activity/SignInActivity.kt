@@ -1,4 +1,4 @@
-package com.example.letmeknow
+package com.example.letmeknow.Activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -22,7 +22,7 @@ class SignInActivity : AppCompatActivity() {
 
         firebaseAuth=FirebaseAuth.getInstance()
         binding.directsignup.setOnClickListener{
-            val intent= Intent(this,SignUpActivity::class.java)
+            val intent= Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
 

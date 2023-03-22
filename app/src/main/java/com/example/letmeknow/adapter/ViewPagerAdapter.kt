@@ -1,4 +1,4 @@
-package com.example.letmeknow
+package com.example.letmeknow.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

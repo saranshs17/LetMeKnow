@@ -1,4 +1,4 @@
-package com.example.letmeknow
+package com.example.letmeknow.Fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,12 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager.widget.ViewPager
+import com.example.letmeknow.Activity.CreatePollActivity
+import com.example.letmeknow.R
+import com.example.letmeknow.adapter.ViewPagerAdapter
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
-import kotlin.concurrent.fixedRateTimer
 
 
 class HomeFragment : Fragment() {
