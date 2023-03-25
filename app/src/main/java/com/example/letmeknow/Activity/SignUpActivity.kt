@@ -1,9 +1,11 @@
 package com.example.letmeknow.Activity
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.example.letmeknow.databinding.ActivitySignUpBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -47,5 +49,16 @@ class SignUpActivity : AppCompatActivity() {
                 Toast.makeText(this, "Empty Fields are not allowed!!", Toast.LENGTH_SHORT).show()
             }
         }
+        // Get the root view of the current activity
+        val rootView: View = window.decorView.findViewById(android.R.id.content)
+
+        rootView.setOnTouchListener { _, _ ->
+            // Hide the soft keyboard
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(rootView.windowToken, 0)
+            // Return false to indicate that the touch event has not been consumed
+            false
+        }
+
     }
 }

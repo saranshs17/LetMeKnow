@@ -11,10 +11,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.letmeknow.R
+import com.example.letmeknow.adapter.globalPAdapter
 import com.example.letmeknow.model.InputData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -74,6 +76,7 @@ class CreatePollActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
         }
 
 
+
         firebaseAuth = FirebaseAuth.getInstance()
         val email = firebaseAuth.currentUser?.email.toString()
 
@@ -93,8 +96,7 @@ class CreatePollActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
             val userMap = hashMapOf(
                 "Question" to sques,
                 "DateandTime" to stextDateTime,
-                "List" to sdocData,
-                "picURL" to ""
+                "List" to sdocData
             )
 
             db.collection(email).add(userMap)
@@ -107,6 +109,13 @@ class CreatePollActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
 
                     // add data to global with same document id as of current user
                     db.collection("Global").document(it.id).set(userMap)
+                    val countMap= hashMapOf(
+                        "Count" to 0
+                    )
+                    for(i in 0 until optionlist.size) {
+                        db.collection("Global").document(it.id).collection("PollData")
+                            .document(it.id).collection(optionlist[i]).document(i.toString()).set(countMap)
+                    }
 
                     val prog = ProgressDialog(this)
                     prog.setMessage("Uploading Image...")
@@ -156,6 +165,7 @@ class CreatePollActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
 
         //to pick date
         pickDate()
+
 
 
     }
@@ -213,6 +223,7 @@ class CreatePollActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
         val bt = findViewById<Button>(R.id.btntextTime)
         bt.text = "$savedDay-$savedMonth-$savedYear, $savedHour:$savedMinute"
         textDateTime = bt.text.toString()
+
     }
 
     fun onAdd(view: View) {

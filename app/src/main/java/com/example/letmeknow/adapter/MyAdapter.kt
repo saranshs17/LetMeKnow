@@ -14,11 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.letmeknow.model.InputData
 import com.example.letmeknow.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import org.w3c.dom.Text
 
 class MyAdapter(val c: Context, private val userList: ArrayList<InputData>) :
     RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
@@ -63,6 +59,7 @@ class MyAdapter(val c: Context, private val userList: ArrayList<InputData>) :
                                 dialog.dismiss()
                                 db.collection("${db.collection(email).id}").document(docID).delete()
                                 db.collection("Global").document(docID).delete()
+                                db.collection("Global").document(docID).collection("PollData").document(docID).delete()
                             }
                             .setNegativeButton("No") { dialog, _ ->
                                 dialog.dismiss()
@@ -105,7 +102,9 @@ class MyAdapter(val c: Context, private val userList: ArrayList<InputData>) :
         }
 
         //passing the list to child recycler view
+
         val adapter = ChildRecycler(c, valuelist)
         holder.childRecyclerview.adapter = adapter
+
     }
 }

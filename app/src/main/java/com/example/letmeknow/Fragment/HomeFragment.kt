@@ -14,7 +14,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.tabs.TabLayout
 
 
-class HomeFragment : Fragment() {
+class HomeFragment() : Fragment() {
 
     var tabLayout: TabLayout? = null
     var viewPager: ViewPager? = null
@@ -43,7 +43,7 @@ class HomeFragment : Fragment() {
         viewPager = view.findViewById<ViewPager>(R.id.viewPager)
         val adapter = ViewPagerAdapter(childFragmentManager)
         adapter.addFragment(ActiveFragment(), "Active Polls")
-        adapter.addFragment(ResultsFragment(), "Results")
+        adapter.addFragment(ResultsFragment(), "My Polls")
         viewPager?.setAdapter(adapter)
         tabLayout?.setupWithViewPager(viewPager)
     }

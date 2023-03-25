@@ -67,42 +67,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/Simg"
             ></ImageView>
-    <TextView
-        android:id="@+id/votingchoice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Allow voters to vote for"
-        android:textColor="#F88723"
 
-        android:textSize="18dp"
-        app:layout_constraintStart_toStartOf="@id/guideline_left"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-    <RadioGroup
-        android:id="@+id/radiogp1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/guideline_left"
-        app:layout_constraintTop_toBottomOf="@+id/votingchoice">
-
-        <RadioButton
-            android:id="@+id/choice1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/c1"
-            android:checked="true"
-            android:onClick="checkButton"
-            android:text="Single choice" />
-
-        <RadioButton
-            android:id="@+id/choice2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="checkButton"
-            android:text="Multiple choices" />
-
-    </RadioGroup>
 
     <TextView
         android:id="@+id/endtime"
@@ -114,7 +79,7 @@
 
         android:textSize="18dp"
         app:layout_constraintStart_toStartOf="@id/guideline_left"
-        app:layout_constraintTop_toBottomOf="@+id/radiogp1" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <Button
         android:id="@+id/btntextTime"

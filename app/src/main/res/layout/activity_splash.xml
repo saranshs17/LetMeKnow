@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffe9b7"
+    android:background="#FFE4CF"
     tools:context=".Activity.SplashActivity">
 
     <com.airbnb.lottie.LottieAnimationView
@@ -14,4 +14,5 @@
         app:lottie_rawRes="@raw/splash"
         app:lottie_autoPlay="true"
         android:layout_centerInParent="true" />
+
 </RelativeLayout>

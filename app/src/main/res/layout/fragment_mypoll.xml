@@ -5,12 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Fragment.MyPollFragment">
+    tools:context=".Fragment.ResultsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/mRecycler"
+        android:id="@+id/resultsRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/mylist">
+        tools:listitem="@layout/resultlist">
     </androidx.recyclerview.widget.RecyclerView>
+
+
 </LinearLayout>

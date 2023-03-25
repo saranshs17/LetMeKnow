@@ -58,6 +58,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage-ktx:20.0.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
 
+    //for bar chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
 
 
 }
