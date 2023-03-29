@@ -8,15 +8,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.letmeknow.R
-import com.example.letmeknow.adapter.MyAdapter
-import com.example.letmeknow.adapter.ResultPAdapter
 import com.example.letmeknow.adapter.globalPAdapter
 import com.example.letmeknow.model.CountData
 import com.example.letmeknow.model.GlobalData
-import com.example.letmeknow.model.InputData
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 
 
@@ -25,6 +21,7 @@ class ActiveFragment : Fragment() {
     private lateinit var recylerView: RecyclerView
     private lateinit var globalList: ArrayList<GlobalData>
     private lateinit var gList: ArrayList<CountData>
+
 
     private var db = Firebase.firestore
 

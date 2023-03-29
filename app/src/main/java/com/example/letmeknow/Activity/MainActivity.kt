@@ -1,6 +1,9 @@
 package com.example.letmeknow.Activity
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -34,6 +37,22 @@ class MainActivity : AppCompatActivity() {
                 R.id.profile ->replaceFragment(ProfileFragment())
             }
             true
+        }
+        createNotificationChannel()
+    }
+
+    private fun createNotificationChannel(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            val name:CharSequence="Let Me Know Channel"
+            val description="Channel for End Time"
+            val importance= NotificationManager.IMPORTANCE_HIGH
+            val channel= NotificationChannel("saransh",name,importance)
+            channel.description=description
+            val notificationManager=getSystemService(
+                NotificationManager::class.java
+            )
+
+            notificationManager.createNotificationChannel(channel)
         }
     }
 

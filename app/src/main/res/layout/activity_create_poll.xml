@@ -81,23 +81,52 @@
         app:layout_constraintStart_toStartOf="@id/guideline_left"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
+<!--    <Button-->
+<!--        android:id="@+id/btntextTime"-->
+<!--        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:paddingLeft="10dp"-->
+<!--        android:paddingRight="10dp"-->
+<!--        android:text="@tools:sample/date/ddmmyy"-->
+<!--        android:textColor="@color/dark_grey"-->
+<!--        android:textSize="15sp"-->
+<!--        app:icon="@drawable/round_access_time_24"-->
+<!--        app:iconTint="@color/dark_grey"-->
+
+<!--        app:layout_constraintStart_toStartOf="@id/guideline_left"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/endtime">-->
+
+<!--    </Button>-->
+
     <Button
         android:id="@+id/btntextTime"
         style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
+        android:text="Set Time"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:text="@tools:sample/date/ddmmyy"
+
         android:textColor="@color/dark_grey"
-        android:textSize="15sp"
+        android:paddingRight="10dp"
         app:icon="@drawable/round_access_time_24"
         app:iconTint="@color/dark_grey"
-
         app:layout_constraintStart_toStartOf="@id/guideline_left"
-        app:layout_constraintTop_toBottomOf="@+id/endtime">
-
-    </Button>
+        app:layout_constraintTop_toBottomOf="@+id/endtime"/>
+    <Button
+        android:id="@+id/setalarm"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Alarm"
+        android:layout_marginRight="80dp"
+        android:paddingLeft="10dp"
+        android:textColor="@color/dark_grey"
+        android:paddingRight="10dp"
+        app:icon="@drawable/round_access_time_24"
+        app:iconTint="@color/dark_grey"
+        app:layout_constraintEnd_toStartOf="@id/guideline_right"
+        app:layout_constraintTop_toBottomOf="@+id/endtime"/>
 
     <TextView
         android:id="@+id/options"

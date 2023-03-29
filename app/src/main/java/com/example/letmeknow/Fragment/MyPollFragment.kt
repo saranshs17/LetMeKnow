@@ -5,8 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.letmeknow.R
 import com.example.letmeknow.adapter.ResultPAdapter
 import com.example.letmeknow.model.CountData
@@ -21,6 +23,7 @@ class MyPollFragment() : Fragment() {
     private lateinit var recylerView: RecyclerView
     private lateinit var globalList: ArrayList<GlobalData>
     private lateinit var gList: ArrayList<CountData>
+    private lateinit var swipe:SwipeRefreshLayout
 
     private var db = Firebase.firestore
 
@@ -33,6 +36,13 @@ class MyPollFragment() : Fragment() {
         recylerView.layoutManager = LinearLayoutManager(context)
         globalList=ArrayList<GlobalData>()
         gList= ArrayList<CountData>()
+        swipe=view.findViewById(R.id.swipetoRefresh)
+        swipe.setOnRefreshListener {
+
+            recylerView.adapter?.notifyDataSetChanged()
+            Toast.makeText(context, "Results Refreshed!", Toast.LENGTH_SHORT).show()
+            swipe.isRefreshing=false
+        }
 
         db = FirebaseFirestore.getInstance()
 
@@ -64,6 +74,8 @@ class MyPollFragment() : Fragment() {
                                 }
                         }
                         recylerView.adapter=ResultPAdapter(data["uid"].toString(),globalList,gList)
+
+
                     }
                 }
             }

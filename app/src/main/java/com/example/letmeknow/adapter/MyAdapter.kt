@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.letmeknow.model.InputData
 import com.example.letmeknow.R
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class MyAdapter(val c: Context, private val userList: ArrayList<InputData>) :
@@ -60,6 +61,16 @@ class MyAdapter(val c: Context, private val userList: ArrayList<InputData>) :
                                 db.collection("${db.collection(email).id}").document(docID).delete()
                                 db.collection("Global").document(docID).delete()
                                 db.collection("Global").document(docID).collection("PollData").document(docID).delete()
+                                db.collection("MakeNotification").document("docNFN").get()
+                                    .addOnSuccessListener {documentSnapshot ->
+                                        if (documentSnapshot != null && documentSnapshot.exists()){
+                                            val fieldV = documentSnapshot.get("document") as List<String>
+                                            if(fieldV.contains(docID))
+                                            {
+                                                db.collection("MakeNotification").document("docNFN").update("document",FieldValue.arrayRemove(docID))
+                                            }
+                                        }
+                                    }
                             }
                             .setNegativeButton("No") { dialog, _ ->
                                 dialog.dismiss()

@@ -1,13 +1,21 @@
 package com.example.letmeknow.Activity
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.app.DatePickerDialog
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.ProgressDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.Image
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,9 +23,16 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import com.example.letmeknow.KotlinClass.EndTimeReceiver
 import com.example.letmeknow.R
 import com.example.letmeknow.adapter.globalPAdapter
 import com.example.letmeknow.model.InputData
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
@@ -30,35 +45,39 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
-class CreatePollActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
-    TimePickerDialog.OnTimeSetListener {
-    var day = 0
-    var month = 0
-    var year = 0
-    var hour = 0
-    var minute = 0
-
-    var savedDay = 0
-    var savedMonth = 0
-    var savedYear = 0
-    var savedHour = 0
-    var savedMinute = 0
+class CreatePollActivity : AppCompatActivity(){
+//    var day = 0
+//    var month = 0
+//    var year = 0
+//    var hour = 0
+//    var minute = 0
+//
+//    var savedDay = 0
+//    var savedMonth = 0
+//    var savedYear = 0
+//    var savedHour = 0
+//    var savedMinute = 0
 
 
     private lateinit var ques: EditText
     private lateinit var img: ImageView
     private lateinit var btnCreate: Button
     private lateinit var btnSelect: Button
-    private lateinit var btnUpload: Button
+    private lateinit var btnTime: Button
+    private lateinit var btnAlarm: Button
     private lateinit var textDateTime: String
     private var optionlist = mutableListOf<String>()
     private var db = Firebase.firestore
     private lateinit var storageRef: StorageReference
     private var ImageUri: Uri? = null
     private lateinit var firebaseAuth: FirebaseAuth
-
+    private lateinit var pickerTime:MaterialTimePicker
+    private lateinit var calendar:Calendar
+    private lateinit var alarmManager: AlarmManager
+    private lateinit var pendingIntent: PendingIntent
 
     private var parentLinearLayout: LinearLayout? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +86,7 @@ class CreatePollActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
         ques = findViewById(R.id.question)
         btnCreate = findViewById(R.id.extendedFloatingActionButton2)
         btnSelect = findViewById(R.id.Simg)
+
         img = findViewById(R.id.imageView)
         storageRef = FirebaseStorage.getInstance().reference.child("Images")
 
@@ -75,7 +95,16 @@ class CreatePollActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
             selectImage()
         }
 
+        btnTime=findViewById(R.id.btntextTime)
+        btnAlarm=findViewById(R.id.setalarm)
 
+        btnTime.setOnClickListener {
+            showTimePicker()
+
+        }
+        btnAlarm.setOnClickListener {
+            setEndTime()
+        }
 
         firebaseAuth = FirebaseAuth.getInstance()
         val email = firebaseAuth.currentUser?.email.toString()
@@ -117,6 +146,20 @@ class CreatePollActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
                             .document(it.id).collection(optionlist[i]).document(i.toString()).set(countMap)
                     }
 
+                    val emailCheck=ArrayList<String>()
+                    emailCheck.add("check")
+                    val checkMap= hashMapOf(
+                        "email" to emailCheck
+                    )
+                    db.collection("Global").document(docId).collection("check").document(docId).set(checkMap)
+
+                    val newdoc=ArrayList<String>()
+                    newdoc.add("check")
+                    val makenotif= hashMapOf(
+                        "document" to newdoc
+                    )
+                    db.collection("MakeNotification").document("docNFN").set(makenotif)
+
                     val prog = ProgressDialog(this)
                     prog.setMessage("Uploading Image...")
                     prog.setCancelable(false)
@@ -137,8 +180,7 @@ class CreatePollActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
                                     userMap.putAll(map)
                                     db.collection("Global").document(docId).update(userMap)
                                 }
-                                Toast.makeText(this, "Successfully Uploaded", Toast.LENGTH_SHORT)
-                                    .show()
+
                                 if (prog.isShowing) prog.dismiss()
                             }
                             .addOnFailureListener {
@@ -151,9 +193,14 @@ class CreatePollActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
 
                     Toast.makeText(this, "Successfully Created ", Toast.LENGTH_SHORT).show()
                     ques.text.clear()
+
+
+
                     //to home
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
+
+
                 }
                 .addOnFailureListener {
                     Toast.makeText(this, "Failed to Create", Toast.LENGTH_SHORT).show()
@@ -164,10 +211,50 @@ class CreatePollActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
         parentLinearLayout = findViewById(R.id.optionLayout)
 
         //to pick date
-        pickDate()
+//        pickDate()
 
 
 
+    }
+
+    private fun setEndTime() {
+        alarmManager=getSystemService(ALARM_SERVICE) as AlarmManager
+        val intent=Intent(this,EndTimeReceiver::class.java)
+
+        pendingIntent=PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_IMMUTABLE)
+
+        alarmManager.setRepeating(
+
+            AlarmManager.RTC_WAKEUP,calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,pendingIntent
+        )
+        Toast.makeText(this, "End Time Set Successfully ", Toast.LENGTH_SHORT)
+            .show()
+    }
+
+    private fun showTimePicker() {
+        pickerTime=MaterialTimePicker.Builder()
+            .setTimeFormat(TimeFormat.CLOCK_12H)
+            .setHour(12)
+            .setMinute(0)
+            .setTitleText("Select End Time")
+            .build()
+
+        pickerTime.show(supportFragmentManager,"saransh")
+
+        pickerTime.addOnPositiveButtonClickListener{
+            if(pickerTime.hour>12){
+                textDateTime =String.format("%02d",pickerTime.hour - 12) + " : " + String.format("%02d",pickerTime.minute)+"PM"
+            }else{
+                textDateTime =String.format("%02d",pickerTime.hour - 12) + " : " + String.format("%02d",pickerTime.minute)+"AM"
+            }
+
+            calendar= Calendar.getInstance()
+            calendar[Calendar.HOUR_OF_DAY]=pickerTime.hour
+            calendar[Calendar.MINUTE]=pickerTime.minute
+            calendar[Calendar.SECOND]=0
+            calendar[Calendar.MILLISECOND]=0
+        }
     }
 
     private fun selectImage() {
@@ -188,43 +275,64 @@ class CreatePollActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
         }
     }
 
-    private fun getDateTimeCalendar() {
-        val cal: Calendar = Calendar.getInstance()
-        day = cal.get(Calendar.DAY_OF_MONTH)
-        month = cal.get(Calendar.MONTH)
-        year = cal.get(Calendar.YEAR)
-        hour = cal.get(Calendar.MINUTE)
-        minute = cal.get(Calendar.MINUTE)
-    }
+//    private fun getDateTimeCalendar() {
+//        val cal: Calendar = Calendar.getInstance()
+//        day = cal.get(Calendar.DAY_OF_MONTH)
+//        month = cal.get(Calendar.MONTH)
+//        year = cal.get(Calendar.YEAR)
+//        hour = cal.get(Calendar.MINUTE)
+//        minute = cal.get(Calendar.MINUTE)
+//    }
 
-    private fun pickDate() {
-        val btn = findViewById<Button>(R.id.btntextTime)
-        btn.setOnClickListener {
-            getDateTimeCalendar()
+//    private fun pickDate() {
+//        val btn = findViewById<Button>(R.id.btntextTime)
+//        btn.setOnClickListener {
+//            getDateTimeCalendar()
+//
+//            DatePickerDialog(this, this, year, month, day).show()
+//        }
+//    }
 
-            DatePickerDialog(this, this, year, month, day).show()
-        }
-    }
-
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        savedDay = dayOfMonth
-        savedMonth = month
-        savedYear = year
-
-        getDateTimeCalendar()
-        TimePickerDialog(this, this, hour, minute, true).show()
-    }
+//    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+//        savedDay = dayOfMonth
+//        savedMonth = month+1
+//        savedYear = year
+//
+//        getDateTimeCalendar()
+//        TimePickerDialog(this, this, hour, minute, true).show()
+//    }
 
     @SuppressLint("SetTextI18n")
-    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        savedHour = hourOfDay
-        savedMinute = minute
-
-        val bt = findViewById<Button>(R.id.btntextTime)
-        bt.text = "$savedDay-$savedMonth-$savedYear, $savedHour:$savedMinute"
-        textDateTime = bt.text.toString()
-
-    }
+//    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+//        savedHour = hourOfDay
+//        savedMinute = minute
+//
+//        val bt = findViewById<Button>(R.id.btntextTime)
+//        bt.text = "$savedDay-$savedMonth-$savedYear, $savedHour:$savedMinute"
+//        textDateTime = bt.text.toString()
+//
+//
+//        calendar=Calendar.getInstance()
+//        calendar[Calendar.HOUR_OF_DAY]=savedHour
+//        calendar[Calendar.YEAR]=savedYear
+//        calendar[Calendar.MONTH]=savedMonth
+//        calendar[Calendar.MINUTE]=savedMinute
+//        calendar[Calendar.DAY_OF_MONTH]=savedDay
+//
+//        alarmManager=getSystemService(ALARM_SERVICE) as AlarmManager
+//        val intent=Intent(this,EndTimeReceiver::class.java)
+//
+//        pendingIntent=PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_IMMUTABLE)
+//
+//        alarmManager.setRepeating(
+//
+//            AlarmManager.RTC_WAKEUP,calendar.timeInMillis,
+//            AlarmManager.INTERVAL_DAY,pendingIntent
+//        )
+//        Toast.makeText(this, "End Time Set Successfully ", Toast.LENGTH_SHORT)
+//            .show()
+//
+//    }
 
     fun onAdd(view: View) {
         val inflater =
@@ -236,4 +344,7 @@ class CreatePollActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
     fun onDelete(view: View) {
         parentLinearLayout!!.removeView(view.parent as View)
     }
+
+
+
 }
