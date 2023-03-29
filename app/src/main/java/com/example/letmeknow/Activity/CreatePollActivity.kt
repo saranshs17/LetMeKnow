@@ -73,6 +73,7 @@ class CreatePollActivity : AppCompatActivity(){
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var pickerTime:MaterialTimePicker
     private lateinit var calendar:Calendar
+    private lateinit var cal:Calendar
     private lateinit var alarmManager: AlarmManager
     private lateinit var pendingIntent: PendingIntent
 
@@ -102,9 +103,7 @@ class CreatePollActivity : AppCompatActivity(){
             showTimePicker()
 
         }
-        btnAlarm.setOnClickListener {
-            setEndTime()
-        }
+
 
         firebaseAuth = FirebaseAuth.getInstance()
         val email = firebaseAuth.currentUser?.email.toString()
@@ -138,11 +137,17 @@ class CreatePollActivity : AppCompatActivity(){
 
                     // add data to global with same document id as of current user
                     db.collection("Global").document(it.id).set(userMap)
+                    //add data for Result
+                    db.collection("Result").document(it.id).set(userMap)
                     val countMap= hashMapOf(
                         "Count" to 0
                     )
                     for(i in 0 until optionlist.size) {
                         db.collection("Global").document(it.id).collection("PollData")
+                            .document(it.id).collection(optionlist[i]).document(i.toString()).set(countMap)
+                    }
+                    for(i in 0 until optionlist.size) {
+                        db.collection("Result").document(it.id).collection("PollData")
                             .document(it.id).collection(optionlist[i]).document(i.toString()).set(countMap)
                     }
 
@@ -152,13 +157,10 @@ class CreatePollActivity : AppCompatActivity(){
                         "email" to emailCheck
                     )
                     db.collection("Global").document(docId).collection("check").document(docId).set(checkMap)
+                    db.collection("Result").document(docId).collection("check").document(docId).set(checkMap)
 
                     val newdoc=ArrayList<String>()
                     newdoc.add("check")
-                    val makenotif= hashMapOf(
-                        "document" to newdoc
-                    )
-                    db.collection("MakeNotification").document("docNFN").set(makenotif)
 
                     val prog = ProgressDialog(this)
                     prog.setMessage("Uploading Image...")
@@ -179,6 +181,7 @@ class CreatePollActivity : AppCompatActivity(){
                                     map["picURL"] = uri.toString()
                                     userMap.putAll(map)
                                     db.collection("Global").document(docId).update(userMap)
+                                    db.collection("Result").document(docId).update(userMap)
                                 }
 
                                 if (prog.isShowing) prog.dismiss()
@@ -191,9 +194,44 @@ class CreatePollActivity : AppCompatActivity(){
                             }
                     }
 
-                    Toast.makeText(this, "Successfully Created ", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Successfully Created", Toast.LENGTH_SHORT).show()
                     ques.text.clear()
 
+                    val maps=HashMap<String,Any>()
+                    maps["Hour"]=calendar[Calendar.HOUR_OF_DAY]
+                    maps["Minute"]=calendar[Calendar.MINUTE]
+                    db.collection("Enddata").document(it.id).set(maps)
+
+
+                    db.collection("Enddata").document(it.id).get()
+                        .addOnSuccessListener {documentSnapshot->
+                            if(documentSnapshot != null && documentSnapshot.exists()){
+                                val hour=documentSnapshot.getLong("Hour")
+                                val minute=documentSnapshot.getLong("Minute")
+
+                                cal=Calendar.getInstance()
+                                if (hour != null) {
+                                    cal[Calendar.HOUR_OF_DAY]=hour.toInt()
+                                }
+                                if (minute != null) {
+                                    cal[Calendar.MINUTE]=minute.toInt()
+                                }
+                                cal[Calendar.SECOND]=0
+                                cal[Calendar.MILLISECOND]=0
+
+                                alarmManager=getSystemService(ALARM_SERVICE) as AlarmManager
+                                val intent1=Intent(this,EndTimeReceiver::class.java)
+                                intent1.putExtra("docId",docId)
+                                pendingIntent=PendingIntent.getBroadcast(this,0,intent1,PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+
+                                alarmManager.set(
+
+                                    AlarmManager.RTC_WAKEUP,cal.timeInMillis,pendingIntent,
+                                )
+                                Toast.makeText(this, "End Time Set Successfully ", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
 
 
                     //to home
@@ -217,21 +255,6 @@ class CreatePollActivity : AppCompatActivity(){
 
     }
 
-    private fun setEndTime() {
-        alarmManager=getSystemService(ALARM_SERVICE) as AlarmManager
-        val intent=Intent(this,EndTimeReceiver::class.java)
-
-        pendingIntent=PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_IMMUTABLE)
-
-        alarmManager.setRepeating(
-
-            AlarmManager.RTC_WAKEUP,calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY,pendingIntent
-        )
-        Toast.makeText(this, "End Time Set Successfully ", Toast.LENGTH_SHORT)
-            .show()
-    }
-
     private fun showTimePicker() {
         pickerTime=MaterialTimePicker.Builder()
             .setTimeFormat(TimeFormat.CLOCK_12H)
@@ -246,7 +269,7 @@ class CreatePollActivity : AppCompatActivity(){
             if(pickerTime.hour>12){
                 textDateTime =String.format("%02d",pickerTime.hour - 12) + " : " + String.format("%02d",pickerTime.minute)+"PM"
             }else{
-                textDateTime =String.format("%02d",pickerTime.hour - 12) + " : " + String.format("%02d",pickerTime.minute)+"AM"
+                textDateTime =String.format("%02d",pickerTime.hour) + " : " + String.format("%02d",pickerTime.minute)+"AM"
             }
 
             calendar= Calendar.getInstance()
@@ -302,7 +325,7 @@ class CreatePollActivity : AppCompatActivity(){
 //        TimePickerDialog(this, this, hour, minute, true).show()
 //    }
 
-    @SuppressLint("SetTextI18n")
+
 //    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
 //        savedHour = hourOfDay
 //        savedMinute = minute

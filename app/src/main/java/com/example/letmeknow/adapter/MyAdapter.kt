@@ -61,16 +61,8 @@ class MyAdapter(val c: Context, private val userList: ArrayList<InputData>) :
                                 db.collection("${db.collection(email).id}").document(docID).delete()
                                 db.collection("Global").document(docID).delete()
                                 db.collection("Global").document(docID).collection("PollData").document(docID).delete()
-                                db.collection("MakeNotification").document("docNFN").get()
-                                    .addOnSuccessListener {documentSnapshot ->
-                                        if (documentSnapshot != null && documentSnapshot.exists()){
-                                            val fieldV = documentSnapshot.get("document") as List<String>
-                                            if(fieldV.contains(docID))
-                                            {
-                                                db.collection("MakeNotification").document("docNFN").update("document",FieldValue.arrayRemove(docID))
-                                            }
-                                        }
-                                    }
+                                db.collection("Result").document(docID).delete()
+                                db.collection("Result").document(docID).collection("PollData").document(docID).delete()
                             }
                             .setNegativeButton("No") { dialog, _ ->
                                 dialog.dismiss()

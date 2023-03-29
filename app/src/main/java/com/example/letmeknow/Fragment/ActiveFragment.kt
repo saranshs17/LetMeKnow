@@ -39,36 +39,36 @@ class ActiveFragment : Fragment() {
 
         db.collection("Global").get()
             .addOnSuccessListener {
-            if(!it.isEmpty){
-                globalList.clear()
-                for(data in it.documents){
+                if(!it.isEmpty){
+                    globalList.clear()
+                    for(data in it.documents){
 //                        val user: GlobalData? = data.toObject(GlobalData::class.java)
-                    val user=GlobalData(data["Question"].toString(),data["DateandTime"].toString(), data["List"] as ArrayList<String>,data["uid"].toString(),data["picURL"].toString())
-                    if (user != null) {
-                        globalList.add(user)
-                    }
-                    for(i in 0 until (data["List"] as ArrayList<String>).size ) {
-                        var optn:ArrayList<String>
-                        optn=(data["List"] as ArrayList<String>)
-                        db.collection("Global").document(data["uid"].toString()).collection("PollData")
-                            .document(data["uid"].toString()).collection(optn[i]).get()
-                            .addOnSuccessListener {
-                                if (!it.isEmpty) {
-                                    for (data in it.documents) {
-                                        val userr=CountData(data["Count"] as Long)
-                                        if (userr != null) {
-                                            gList.add(userr)
+                        val user=GlobalData(data["Question"].toString(),data["DateandTime"].toString(), data["List"] as ArrayList<String>,data["uid"].toString(),data["picURL"].toString())
+                        if (user != null) {
+                            globalList.add(user)
+                        }
+                        for(i in 0 until (data["List"] as ArrayList<String>).size ) {
+                            var optn:ArrayList<String>
+                            optn=(data["List"] as ArrayList<String>)
+                            db.collection("Global").document(data["uid"].toString()).collection("PollData")
+                                .document(data["uid"].toString()).collection(optn[i]).get()
+                                .addOnSuccessListener {
+                                    if (!it.isEmpty) {
+                                        for (data in it.documents) {
+                                            val userr=CountData(data["Count"] as Long)
+                                            if (userr != null) {
+                                                gList.add(userr)
+                                            }
                                         }
+
                                     }
-
                                 }
-                            }
+                        }
                     }
-                }
-                recylerView.adapter= globalPAdapter(requireContext(),globalList,gList)
+                    recylerView.adapter= globalPAdapter(requireContext(),globalList,gList)
 
+                }
             }
-        }
 
         return view
     }

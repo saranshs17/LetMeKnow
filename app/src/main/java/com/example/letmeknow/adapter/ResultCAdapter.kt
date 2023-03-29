@@ -41,9 +41,9 @@ class ResultCAdapter(
         for (i in 0 until AlldocId.size) {
 
             val list = ArrayList<BarEntry>()
-            val label = MutableList<String>(List.size) { "null" }
+            val label = MutableList(List.size) { "null" }
             for (j in 0 until List.size) {
-                val drf = db.collection("Global").document(AlldocId[i].id)
+                val drf = db.collection("Result").document(AlldocId[i].id)
                     .collection("PollData").document(AlldocId[i].id)
                     .collection(List[j]).document(j.toString())
                 drf.get()
@@ -56,6 +56,7 @@ class ResultCAdapter(
                                 holder.optntv.text = holder.optntv.text.toString() + "\n" + ((j).toString() + ".) " + List[j])
 
                                 label.set(j, j.toString())
+                                db.collection("data").document()
                                 val barDataSet = BarDataSet(list, "Count")
                                 val data = BarData(label, barDataSet)
                                 holder.barChart.data = data

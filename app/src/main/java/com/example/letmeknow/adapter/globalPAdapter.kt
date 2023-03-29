@@ -1,7 +1,10 @@
 package com.example.letmeknow.adapter
 
 import android.Manifest
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Context.ALARM_SERVICE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.view.LayoutInflater
@@ -10,27 +13,33 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.letmeknow.Activity.CreatePollActivity
 import com.example.letmeknow.Activity.MainActivity
+import com.example.letmeknow.KotlinClass.EndTimeReceiver
 import com.example.letmeknow.R
 import com.example.letmeknow.model.CountData
 import com.example.letmeknow.model.GlobalData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class globalPAdapter(private val c: Context, private val globalList: ArrayList<GlobalData>, private val gList: ArrayList<CountData>):
     RecyclerView.Adapter<globalPAdapter.MyViewHolder>() {
-
     private val db= FirebaseFirestore.getInstance()
+    private lateinit var calendar: Calendar
     private var firebaseAuth = FirebaseAuth.getInstance()
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val Question: TextView
@@ -70,7 +79,38 @@ class globalPAdapter(private val c: Context, private val globalList: ArrayList<G
         return globalList.size
     }
 
+    private fun setAlarm(context: Context, timeInMillis: Long,position:Int) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent1=Intent(context, EndTimeReceiver::class.java)
+        intent1.putExtra("docId",globalList[position].uid)
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent)
+//        Toast.makeText(c, "End Time Set Successfully ", Toast.LENGTH_SHORT)
+//            .show()
+    }
+
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+
+
+        globalList[position].uid?.let { db.collection("Enddata").document(it).get() }
+            ?.addOnSuccessListener {documentSnapshot ->
+                if (documentSnapshot != null && documentSnapshot.exists()){
+                    val hour=documentSnapshot.getLong("Hour")
+                    val minute=documentSnapshot.getLong("Minute")
+                    calendar=Calendar.getInstance()
+                    if (hour != null) {
+                        calendar[Calendar.HOUR_OF_DAY]=hour.toInt()
+                    }
+                    if (minute != null) {
+                        calendar[Calendar.MINUTE]=minute.toInt()
+                    }
+                        calendar[Calendar.SECOND]=0
+                    calendar[Calendar.MILLISECOND]=0
+
+
+                        setAlarm(holder.itemView.context, calendar.timeInMillis,position)
+                }
+            }
 
 
 
@@ -119,4 +159,6 @@ class globalPAdapter(private val c: Context, private val globalList: ArrayList<G
 
 
     }
+
+
 }

@@ -9,9 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.letmeknow.R
 import com.example.letmeknow.model.CountData
 import com.example.letmeknow.model.GlobalData
+import com.example.letmeknow.model.ResultData
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ResultPAdapter(val docID:String,private val globalList: ArrayList<GlobalData>, private val gList: ArrayList<CountData>): RecyclerView.Adapter<ResultPAdapter.RViewHolder>() {
+class ResultPAdapter(val docID:String, private val resultList: ArrayList<ResultData>, private val rList: ArrayList<CountData>): RecyclerView.Adapter<ResultPAdapter.RViewHolder>() {
 
     private val db = FirebaseFirestore.getInstance()
     inner class RViewHolder(itemView: View):RecyclerView.ViewHolder(itemView) {
@@ -31,11 +32,11 @@ class ResultPAdapter(val docID:String,private val globalList: ArrayList<GlobalDa
     }
 
     override fun getItemCount(): Int {
-        return globalList.size
+        return resultList.size
     }
 
     override fun onBindViewHolder(holder: RViewHolder, position: Int) {
-        holder.Question.text=globalList[position].Question
+        holder.Question.text=resultList[position].Question
         holder.childResultRV.setHasFixedSize(true)
         holder.childResultRV.layoutManager=LinearLayoutManager(holder.itemView.context)
 
@@ -43,10 +44,10 @@ class ResultPAdapter(val docID:String,private val globalList: ArrayList<GlobalDa
 
 
         val valuelist = ArrayList<String>()
-        for (value in globalList[position].List) {
+        for (value in resultList[position].List) {
             valuelist.add(value)
 
-            val collectionRef = db.collection("Global")
+            val collectionRef = db.collection("Result")
 
             collectionRef.get().addOnSuccessListener { querySnapshot ->
                 val AlldocId = querySnapshot.documents
