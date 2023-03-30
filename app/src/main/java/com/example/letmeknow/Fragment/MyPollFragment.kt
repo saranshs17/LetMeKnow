@@ -53,7 +53,7 @@ class MyPollFragment() : Fragment() {
                     resultList.clear()
                     for(data in it.documents){
 
-                        val user=ResultData(data["Question"].toString(),data["DateandTime"].toString(), data["List"] as ArrayList<String>,data["uid"].toString(),data["picURL"].toString())
+                        val user=ResultData(data["Question"].toString(),data["Date"].toString(),data["Time"].toString(), data["List"] as ArrayList<String>,data["uid"].toString(),data["picURL"].toString())
                         if (user != null) {
                             resultList.add(user)
                         }

@@ -24,7 +24,8 @@ class MyAdapter(val c: Context, private val userList: ArrayList<InputData>) :
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val Question: TextView
-        val textDateTime: TextView
+        val textDate: TextView
+        val textTime: TextView
 
         val childRecyclerview: RecyclerView
         val btnDot: ImageView
@@ -33,7 +34,8 @@ class MyAdapter(val c: Context, private val userList: ArrayList<InputData>) :
 
         init {
             Question = itemView.findViewById(R.id.questionPoll)
-            textDateTime = itemView.findViewById(R.id.datetimePoll)
+            textDate = itemView.findViewById(R.id.datePoll)
+            textTime = itemView.findViewById(R.id.timePoll)
             childRecyclerview = itemView.findViewById(R.id.myrecyclerView2)
             btnDot = itemView.findViewById(R.id.btnMore)
             btnDot.setOnClickListener { popupMenus(it) }
@@ -44,10 +46,6 @@ class MyAdapter(val c: Context, private val userList: ArrayList<InputData>) :
             popupMenus.inflate(R.menu.popup)
             popupMenus.setOnMenuItemClickListener {
                 when (it.itemId) {
-                    R.id.info -> {
-                        Toast.makeText(c, "Poll Info", Toast.LENGTH_SHORT).show()
-                        true
-                    }
                     R.id.dltPoll -> {
                         val docID = db.collection("${db.collection(email).id}")
                             .document("${userList[position].uid}").id
@@ -63,6 +61,7 @@ class MyAdapter(val c: Context, private val userList: ArrayList<InputData>) :
                                 db.collection("Global").document(docID).collection("PollData").document(docID).delete()
                                 db.collection("Result").document(docID).delete()
                                 db.collection("Result").document(docID).collection("PollData").document(docID).delete()
+                                db.collection("Display").document(docID).delete()
                             }
                             .setNegativeButton("No") { dialog, _ ->
                                 dialog.dismiss()
@@ -93,7 +92,8 @@ class MyAdapter(val c: Context, private val userList: ArrayList<InputData>) :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.Question.text = userList[position].Question
-        holder.textDateTime.text = userList[position].DateandTime
+        holder.textDate.text = userList[position].Date
+        holder.textTime.text = userList[position].Time
         holder.childRecyclerview.setHasFixedSize(true)
         holder.childRecyclerview.layoutManager = LinearLayoutManager(holder.itemView.context)
         // to add data stored in list to recycler view

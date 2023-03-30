@@ -88,12 +88,21 @@
 
 
                     <TextView
-                        android:id="@+id/datetimePoll"
+                        android:id="@+id/datePoll"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
                         android:layout_marginTop="2dp"
-                        android:text="Time and Date"
+                        android:text="Date"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/timePoll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginTop="2dp"
+                        android:text="Time"
                         android:textColor="@color/dark_grey"
                         android:textSize="16sp" />
 

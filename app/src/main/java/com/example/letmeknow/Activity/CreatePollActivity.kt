@@ -64,16 +64,18 @@ class CreatePollActivity : AppCompatActivity(){
     private lateinit var btnCreate: Button
     private lateinit var btnSelect: Button
     private lateinit var btnTime: Button
-    private lateinit var btnAlarm: Button
-    private lateinit var textDateTime: String
+    private lateinit var textDate: String
+    private lateinit var textTime: String
     private var optionlist = mutableListOf<String>()
     private var db = Firebase.firestore
     private lateinit var storageRef: StorageReference
     private var ImageUri: Uri? = null
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var pickerTime:MaterialTimePicker
+
     private lateinit var calendar:Calendar
     private lateinit var cal:Calendar
+    private lateinit var dateC:Calendar
     private lateinit var alarmManager: AlarmManager
     private lateinit var pendingIntent: PendingIntent
 
@@ -88,6 +90,7 @@ class CreatePollActivity : AppCompatActivity(){
         btnCreate = findViewById(R.id.extendedFloatingActionButton2)
         btnSelect = findViewById(R.id.Simg)
 
+
         img = findViewById(R.id.imageView)
         storageRef = FirebaseStorage.getInstance().reference.child("Images")
 
@@ -97,7 +100,7 @@ class CreatePollActivity : AppCompatActivity(){
         }
 
         btnTime=findViewById(R.id.btntextTime)
-        btnAlarm=findViewById(R.id.setalarm)
+
 
         btnTime.setOnClickListener {
             showTimePicker()
@@ -110,7 +113,8 @@ class CreatePollActivity : AppCompatActivity(){
 
         btnCreate.setOnClickListener {
             val sques = ques.text.toString().trim()
-            val stextDateTime = textDateTime.trim()
+            val stextDate = textDate.trim()
+            val stextTime = textTime.trim()
 
             var i = 0
             while (i < parentLinearLayout!!.childCount) {
@@ -123,7 +127,8 @@ class CreatePollActivity : AppCompatActivity(){
             val sdocData = optionlist
             val userMap = hashMapOf(
                 "Question" to sques,
-                "DateandTime" to stextDateTime,
+                "Date" to stextDate,
+                "Time" to stextTime,
                 "List" to sdocData
             )
 
@@ -194,12 +199,19 @@ class CreatePollActivity : AppCompatActivity(){
                             }
                     }
 
+                    val mapping=HashMap<String,Any>()
+                    mapping["display"]=0
+                    db.collection("Display").document(it.id).set(mapping)
+
                     Toast.makeText(this, "Successfully Created", Toast.LENGTH_SHORT).show()
                     ques.text.clear()
 
                     val maps=HashMap<String,Any>()
                     maps["Hour"]=calendar[Calendar.HOUR_OF_DAY]
                     maps["Minute"]=calendar[Calendar.MINUTE]
+                    maps["Month"]=dateC[Calendar.MONTH]
+                    maps["Year"]=dateC[Calendar.YEAR]
+                    maps["Day"]=dateC[Calendar.DAY_OF_MONTH]
                     db.collection("Enddata").document(it.id).set(maps)
 
 
@@ -208,6 +220,9 @@ class CreatePollActivity : AppCompatActivity(){
                             if(documentSnapshot != null && documentSnapshot.exists()){
                                 val hour=documentSnapshot.getLong("Hour")
                                 val minute=documentSnapshot.getLong("Minute")
+                                val month=documentSnapshot.getLong("Month")
+                                val year=documentSnapshot.getLong("Year")
+                                val day=documentSnapshot.getLong("Day")
 
                                 cal=Calendar.getInstance()
                                 if (hour != null) {
@@ -215,6 +230,15 @@ class CreatePollActivity : AppCompatActivity(){
                                 }
                                 if (minute != null) {
                                     cal[Calendar.MINUTE]=minute.toInt()
+                                }
+                                if (year != null) {
+                                    cal[Calendar.YEAR]=year.toInt()
+                                }
+                                if (month != null) {
+                                    cal[Calendar.MONTH]=month.toInt()
+                                }
+                                if (day != null) {
+                                    cal[Calendar.DAY_OF_MONTH]=day.toInt()
                                 }
                                 cal[Calendar.SECOND]=0
                                 cal[Calendar.MILLISECOND]=0
@@ -224,7 +248,7 @@ class CreatePollActivity : AppCompatActivity(){
                                 intent1.putExtra("docId",docId)
                                 pendingIntent=PendingIntent.getBroadcast(this,0,intent1,PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
-                                alarmManager.set(
+                                alarmManager.setExactAndAllowWhileIdle(
 
                                     AlarmManager.RTC_WAKEUP,cal.timeInMillis,pendingIntent,
                                 )
@@ -265,18 +289,36 @@ class CreatePollActivity : AppCompatActivity(){
 
         pickerTime.show(supportFragmentManager,"saransh")
 
+        calendar= Calendar.getInstance()
+        dateC= Calendar.getInstance()
+        val datePicker=DatePickerDialog.OnDateSetListener{view,year,month,dayOfMonth ->
+
+            dateC.set(Calendar.YEAR,year)
+            dateC.set(Calendar.MONTH,month)
+            dateC.set(Calendar.DAY_OF_MONTH,dayOfMonth)
+
+            textDate=String.format("%02d",dayOfMonth)+"-"+String.format("%02d",month+1)+"-"+String.format("%02d",year)
+
+        }
+        DatePickerDialog(this, datePicker, dateC.get(Calendar.YEAR),dateC.get(Calendar.MONTH),dateC.get(Calendar.DAY_OF_MONTH)).show()
+
         pickerTime.addOnPositiveButtonClickListener{
+
+
             if(pickerTime.hour>12){
-                textDateTime =String.format("%02d",pickerTime.hour - 12) + " : " + String.format("%02d",pickerTime.minute)+"PM"
+                textTime =" , "+String.format("%02d",pickerTime.hour - 12) + " : " + String.format("%02d",pickerTime.minute)+"PM"
             }else{
-                textDateTime =String.format("%02d",pickerTime.hour) + " : " + String.format("%02d",pickerTime.minute)+"AM"
+                textTime =" , "+String.format("%02d",pickerTime.hour) + " : " + String.format("%02d",pickerTime.minute)+"AM"
             }
 
-            calendar= Calendar.getInstance()
+
             calendar[Calendar.HOUR_OF_DAY]=pickerTime.hour
             calendar[Calendar.MINUTE]=pickerTime.minute
             calendar[Calendar.SECOND]=0
             calendar[Calendar.MILLISECOND]=0
+            dateC[Calendar.YEAR]=dateC.get(Calendar.YEAR)
+            dateC[Calendar.MONTH]=dateC.get(Calendar.MONTH)
+            dateC[Calendar.DAY_OF_MONTH]=dateC.get(Calendar.DAY_OF_MONTH)
         }
     }
 

@@ -43,7 +43,8 @@ class globalPAdapter(private val c: Context, private val globalList: ArrayList<G
     private var firebaseAuth = FirebaseAuth.getInstance()
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val Question: TextView
-        val textDateTime: TextView
+        val textDate: TextView
+        val textTime: TextView
 
         val childRecyclerview: RecyclerView
 
@@ -54,7 +55,8 @@ class globalPAdapter(private val c: Context, private val globalList: ArrayList<G
 
         init {
             Question = itemView.findViewById(R.id.questionPoll)
-            textDateTime = itemView.findViewById(R.id.datetimePoll)
+            textDate = itemView.findViewById(R.id.datePoll)
+            textTime = itemView.findViewById(R.id.timePoll)
             childRecyclerview = itemView.findViewById(R.id.recyclerView2)
             image=itemView.findViewById(R.id.imageView)
 
@@ -97,12 +99,24 @@ class globalPAdapter(private val c: Context, private val globalList: ArrayList<G
                 if (documentSnapshot != null && documentSnapshot.exists()){
                     val hour=documentSnapshot.getLong("Hour")
                     val minute=documentSnapshot.getLong("Minute")
+                    val month=documentSnapshot.getLong("Month")
+                    val year=documentSnapshot.getLong("Year")
+                    val day=documentSnapshot.getLong("Day")
                     calendar=Calendar.getInstance()
                     if (hour != null) {
                         calendar[Calendar.HOUR_OF_DAY]=hour.toInt()
                     }
                     if (minute != null) {
                         calendar[Calendar.MINUTE]=minute.toInt()
+                    }
+                    if (year != null) {
+                        calendar[Calendar.YEAR]=year.toInt()
+                    }
+                    if (month != null) {
+                        calendar[Calendar.MONTH]=month.toInt()
+                    }
+                    if (day != null) {
+                        calendar[Calendar.DAY_OF_MONTH]=day.toInt()
                     }
                         calendar[Calendar.SECOND]=0
                     calendar[Calendar.MILLISECOND]=0
@@ -116,7 +130,8 @@ class globalPAdapter(private val c: Context, private val globalList: ArrayList<G
 
 
         holder.Question.text = globalList[position].Question
-        holder.textDateTime.text = globalList[position].DateandTime
+        holder.textDate.text = globalList[position].Date
+        holder.textTime.text = globalList[position].Time
         holder.childRecyclerview.setHasFixedSize(true)
         holder.childRecyclerview.layoutManager = LinearLayoutManager(holder.itemView.context)
 

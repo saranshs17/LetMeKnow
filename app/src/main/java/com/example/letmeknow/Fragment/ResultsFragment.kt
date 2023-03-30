@@ -52,12 +52,12 @@ class ResultsFragment : Fragment() {
                     userList.clear()
                     for(data in it.documents){
 //                        val user: InputData? = data.toObject(InputData::class.java)
-                        val user=InputData(data["Question"].toString(),data["DateandTime"].toString(), data["List"] as ArrayList<String>,data["uid"].toString())
+                        val user=InputData(data["Question"].toString(),data["Date"].toString(),data["Time"].toString(), data["List"] as ArrayList<String>,data["uid"].toString())
                         if (user != null) {
                             userList.add(user)
                         }
                     }
-                    recylerView.adapter= MyAdapter(requireContext(),userList)
+                    recylerView.adapter= context?.let { it1 -> MyAdapter(it1,userList) }
                 }
             }
             .addOnFailureListener {

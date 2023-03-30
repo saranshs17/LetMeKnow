@@ -57,19 +57,29 @@ class ResultCAdapter(
 
                                 label.set(j, j.toString())
                                 db.collection("data").document()
-                                val barDataSet = BarDataSet(list, "Count")
-                                val data = BarData(label, barDataSet)
-                                holder.barChart.data = data
-                                holder.barChart.legend.isEnabled=false
-                                barDataSet.setColors(ColorTemplate.COLORFUL_COLORS,255)
-                                holder.barChart.setDescription("Poll Count")
-                                holder.barChart.animateY(1000)
-                                holder.barChart.axisRight.isEnabled = false
-                                barDataSet.valueTextColor = Color.BLACK
-                                holder.barChart.setDescriptionColor(Color.BLACK)
-                                barDataSet.valueTextSize=14f
-                                holder.barChart.setPinchZoom(false)
-                                holder.barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+                                db.collection("Display").document(AlldocId[i].id).get()
+                                    .addOnSuccessListener { documentSnapshot->
+                                        if (documentSnapshot!=null&&documentSnapshot.exists()){
+                                            val display= documentSnapshot.getLong("display")?.toInt()
+                                            if(display!=0){
+                                                val barDataSet = BarDataSet(list, "Count")
+                                                val data = BarData(label, barDataSet)
+                                                holder.barChart.data = data
+                                                holder.barChart.legend.isEnabled=false
+                                                barDataSet.setColors(ColorTemplate.COLORFUL_COLORS,255)
+                                                holder.barChart.setDescription("Poll Count")
+                                                holder.barChart.animateY(1000)
+                                                holder.barChart.axisRight.isEnabled = false
+                                                barDataSet.valueTextColor = Color.BLACK
+                                                holder.barChart.setDescriptionColor(Color.BLACK)
+                                                barDataSet.valueTextSize=14f
+                                                holder.barChart.setPinchZoom(false)
+                                                holder.barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+                                            }
+                                        }
+                                    }
+
+
                                 holder.barChart.invalidate()
 
                             }
@@ -88,4 +98,5 @@ class ResultCAdapter(
 class RcViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
     val optntv = view.findViewById<TextView>(R.id.tvOptionR)
     val barChart: BarChart = itemView.findViewById(R.id.barChart)
+
 }

@@ -43,7 +43,7 @@ class ActiveFragment : Fragment() {
                     globalList.clear()
                     for(data in it.documents){
 //                        val user: GlobalData? = data.toObject(GlobalData::class.java)
-                        val user=GlobalData(data["Question"].toString(),data["DateandTime"].toString(), data["List"] as ArrayList<String>,data["uid"].toString(),data["picURL"].toString())
+                        val user=GlobalData(data["Question"].toString(),data["Date"].toString(),data["Time"].toString(), data["List"] as ArrayList<String>,data["uid"].toString(),data["picURL"].toString())
                         if (user != null) {
                             globalList.add(user)
                         }
@@ -65,7 +65,7 @@ class ActiveFragment : Fragment() {
                                 }
                         }
                     }
-                    recylerView.adapter= globalPAdapter(requireContext(),globalList,gList)
+                    recylerView.adapter= context?.let { it1 -> globalPAdapter(it1,globalList,gList) }
 
                 }
             }
