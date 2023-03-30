@@ -82,7 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="End Time:"
+                        android:text="End Date and Time:"
                         android:textColor="@color/dark_grey"
                         android:textSize="16sp" />
 
