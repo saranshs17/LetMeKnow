@@ -18,7 +18,7 @@ import com.example.letmeknow.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var bottomNavView : BottomNavigationView
+
     lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,10 +38,13 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
+        //for creating notification
         createNotificationChannel()
     }
 
     private fun createNotificationChannel(){
+        //if condition for android version greater than Oreo i.e.8
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             val name:CharSequence="Let Me Know Channel"
             val description="Channel for End Time"
@@ -72,16 +75,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
-            R.id.search ->{
-                Toast.makeText(this,"You clicked Search", Toast.LENGTH_LONG).show()
-                return true
-            }
             R.id.about ->{
-                Toast.makeText(this,"You clicked About", Toast.LENGTH_LONG).show()
-                return true
-            }
-            R.id.settings ->{
-                Toast.makeText(this,"You clicked Settings", Toast.LENGTH_LONG).show()
+                val intent = Intent(this, AboutActivity::class.java)
+                startActivity(intent)
                 return true
             }
             R.id.logout ->{

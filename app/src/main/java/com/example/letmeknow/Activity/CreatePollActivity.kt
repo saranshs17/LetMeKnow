@@ -248,7 +248,7 @@ class CreatePollActivity : AppCompatActivity(){
                                 intent1.putExtra("docId",docId)
                                 pendingIntent=PendingIntent.getBroadcast(this,0,intent1,PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
-                                alarmManager.setExactAndAllowWhileIdle(
+                                alarmManager.set(
 
                                     AlarmManager.RTC_WAKEUP,cal.timeInMillis,pendingIntent,
                                 )

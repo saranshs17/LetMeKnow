@@ -1,13 +1,15 @@
 package com.example.letmeknow.Fragment
 
 import android.os.Bundle
+import android.view.*
+//import android.widget.SearchView
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.letmeknow.R
+import androidx.appcompat.widget.SearchView
 import com.example.letmeknow.adapter.globalPAdapter
 import com.example.letmeknow.model.CountData
 import com.example.letmeknow.model.GlobalData
@@ -21,7 +23,7 @@ class ActiveFragment : Fragment() {
     private lateinit var recylerView: RecyclerView
     private lateinit var globalList: ArrayList<GlobalData>
     private lateinit var gList: ArrayList<CountData>
-
+    private lateinit var swipe: SwipeRefreshLayout
 
     private var db = Firebase.firestore
 
@@ -36,6 +38,13 @@ class ActiveFragment : Fragment() {
         globalList=ArrayList<GlobalData>()
         gList= ArrayList<CountData>()
         db = FirebaseFirestore.getInstance()
+        swipe=view.findViewById(R.id.swipeRefreshGlobal)
+
+        swipe.setOnRefreshListener {
+            recylerView.adapter?.notifyDataSetChanged()
+            Toast.makeText(context, "Polls Refreshed!", Toast.LENGTH_SHORT).show()
+            swipe.isRefreshing=false
+        }
 
         db.collection("Global").get()
             .addOnSuccessListener {
@@ -69,7 +78,7 @@ class ActiveFragment : Fragment() {
 
                 }
             }
-
         return view
     }
+
 }

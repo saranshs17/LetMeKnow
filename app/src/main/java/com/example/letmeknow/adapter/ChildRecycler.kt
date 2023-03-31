@@ -23,13 +23,6 @@ class ChildRecycler(val c: Context, val List: ArrayList<String>) : RecyclerView.
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.myTextView.text=List[position]
 
-//        var i=0
-//        while (i<List.size)
-//        {
-//            holder.btn.setOnClickListener {
-//                i++
-//            }
-//        }
     }
 }
 

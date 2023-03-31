@@ -6,13 +6,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Fragment.ActiveFragment">
-
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/swipeRefreshGlobal">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/globalRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:listitem="@layout/activepoll">
     </androidx.recyclerview.widget.RecyclerView>
-
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>
